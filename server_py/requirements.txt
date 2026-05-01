@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+psycopg2-binary
+bcrypt
+python-dotenv
+pydantic[email]
+passlib
+google-search-results
+beautifulsoup4
+requests
+pypdf

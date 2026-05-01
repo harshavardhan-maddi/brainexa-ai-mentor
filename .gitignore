@@ -1,0 +1,48 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules
+/server/node_modules
+/dist
+/dist-ssr
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+
+# Uploads and User Data
+uploads/
+/server/uploads/
+/public/images/ai-generated/
+/public/images/profiles/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+server_log.txt
+server_log_utf8.txt
+
+# Editor / System
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.dev-logs/
+brain/
+scratch/
+tmp/
+

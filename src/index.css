@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Purple primary palette */
+    --primary: 262 80% 50%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 262 80% 95%;
+    --primary-glow: 262 80% 60%;
+
+    /* Red accent palette */
+    --accent: 0 78% 55%;
+    --accent-foreground: 0 0% 100%;
+    --accent-light: 0 78% 95%;
+    --accent-glow: 0 78% 62%;
+
+    --background: 240 20% 98%;
+    --foreground: 240 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 20% 10%;
+
+    --secondary: 240 10% 94%;
+    --secondary-foreground: 240 20% 20%;
+
+    --muted: 240 10% 94%;
+    --muted-foreground: 240 5% 46%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 10% 90%;
+    --input: 240 10% 90%;
+    --ring: 262 80% 50%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-purple: linear-gradient(135deg, hsl(262, 80%, 50%), hsl(280, 80%, 60%));
+    --gradient-red: linear-gradient(135deg, hsl(0, 78%, 55%), hsl(15, 80%, 58%));
+    --gradient-dark: linear-gradient(135deg, hsl(240, 20%, 10%), hsl(262, 40%, 20%));
+
+    /* Success */
+    --success: 142 70% 45%;
+    --success-foreground: 142 70% 20%;
+    --success-light: 142 70% 95%;
+
+    /* Shadows */
+    --shadow-card: 0 4px 24px -4px hsla(262, 80%, 50%, 0.08);
+    --shadow-elevated: 0 12px 40px -8px hsla(262, 80%, 50%, 0.15);
+    --shadow-red: 0 4px 24px -4px hsla(0, 78%, 55%, 0.15);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 262 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 262 80% 95%;
+    --sidebar-accent-foreground: 262 80% 30%;
+    --sidebar-border: 240 10% 90%;
+    --sidebar-ring: 262 80% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .gradient-purple {
+    background: var(--gradient-purple);
+  }
+  .gradient-red {
+    background: var(--gradient-red);
+  }
+  .gradient-dark {
+    background: var(--gradient-dark);
+  }
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  .shadow-elevated {
+    box-shadow: var(--shadow-elevated);
+  }
+  .shadow-red {
+    box-shadow: var(--shadow-red);
+  }
+  .text-gradient-purple {
+    background: var(--gradient-purple);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-red {
+    background: var(--gradient-red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes progress-bar {
+    0% { width: 0; left: 0; }
+    50% { width: 70%; left: 15%; }
+    100% { width: 0; left: 100%; }
+  }
+  .animate-progress-bar {
+    animation: progress-bar 2s infinite ease-in-out;
+  }
+}

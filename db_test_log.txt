@@ -1,0 +1,3 @@
+Error on query 1: column "id" referenced in foreign key constraint does not exist
+Error on query 2: relation "subjects" does not exist
+Error on query 5: column "id" referenced in foreign key constraint does not exist
