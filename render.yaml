@@ -5,7 +5,7 @@ services:
     name: brainexa-frontend
     env: static
     buildCommand: npm install && npm run build
-    publishPath: dist
+    staticPublishPath: dist
 
     envVars:
       - key: VITE_BACKEND_URL
