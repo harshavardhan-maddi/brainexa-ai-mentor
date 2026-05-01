@@ -1,10 +1,12 @@
 services:
   # 1. Frontend (Static Site)
-  - type: static
+
+  - type: web
     name: brainexa-frontend
     env: static
     buildCommand: npm install && npm run build
     publishPath: dist
+
     envVars:
       - key: VITE_BACKEND_URL
         fromService:
@@ -31,7 +33,7 @@ services:
           property: connectionString
       - key: FRONTEND_URL
         fromService:
-          type: static
+          type: web
           name: brainexa-frontend
           property: host
       - key: PY_BACKEND_URL
@@ -57,7 +59,7 @@ services:
           property: connectionString
       - key: FRONTEND_URL
         fromService:
-          type: static
+          type: web
           name: brainexa-frontend
           property: host
 
