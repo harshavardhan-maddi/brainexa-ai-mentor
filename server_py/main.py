@@ -19,7 +19,13 @@ import re
 import urllib.parse
 import requests
 
-app = FastAPI(title="Brainexa Auth & Knowledge Service")
+print("[STARTUP] Initializing FastAPI...")
+try:
+    app = FastAPI(title="Brainexa Auth & Knowledge Service")
+    print("[STARTUP] FastAPI initialized.")
+except Exception as e:
+    print(f"[CRITICAL] FastAPI failed: {e}")
+    raise
 
 # CORS configuration (MUST be before mounting)
 app.add_middleware(
@@ -41,8 +47,16 @@ basedir = os.path.dirname(os.path.abspath(__file__))
 env_path = os.path.join(basedir, "..", ".env")
 load_dotenv(dotenv_path=env_path, override=True)
 
-from knowledge_engine import KnowledgeEngine
-engine = KnowledgeEngine()
+print("[STARTUP] Loading KnowledgeEngine...")
+try:
+    from knowledge_engine import KnowledgeEngine
+    engine = KnowledgeEngine()
+    print("[STARTUP] KnowledgeEngine loaded.")
+except Exception as e:
+    print(f"[CRITICAL] KnowledgeEngine failed: {e}")
+    import traceback
+    print(traceback.format_exc())
+    raise
 
 @app.post("/knowledge/search")
 async def search_knowledge(topic: str = Body(..., embed=True)):
@@ -348,12 +362,16 @@ If you did not request this, please ignore this email.
     msg.attach(MIMEText(body, 'plain'))
 
     try:
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()
+        if smtp_port == 465:
+            server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+        else:
+            server = smtplib.SMTP(smtp_server, smtp_port)
+            server.starttls()
+            
         try:
             server.login(sender_email, password)
         except smtplib.SMTPAuthenticationError:
-            raise HTTPException(status_code=500, detail="SMTP Auth failed")
+            raise HTTPException(status_code=500, detail="SMTP Authentication failed. Check your App Password.")
         
         server.send_message(msg)
         server.quit()
@@ -419,6 +437,4 @@ async def extract_pdf(file: UploadFile = File(...)):
         print(f"ERROR: PDF extraction error: {e}")
         return {"success": False, "error": str(e)}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+
