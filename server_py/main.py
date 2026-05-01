@@ -52,6 +52,10 @@ try:
     from knowledge_engine import KnowledgeEngine
     engine = KnowledgeEngine()
     print("[STARTUP] KnowledgeEngine loaded.")
+
+@app.get("/")
+async def root():
+    return {"status": "online", "service": "Brainexa Python Backend"}
 except Exception as e:
     print(f"[CRITICAL] KnowledgeEngine failed: {e}")
     import traceback
@@ -361,25 +365,34 @@ If you did not request this, please ignore this email.
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
 
+    # Use Resend API to bypass Render's SMTP block on Free Tier
+    resend_api_key = os.getenv("RESEND_API_KEY")
+    if not resend_api_key:
+        raise HTTPException(status_code=500, detail="RESEND_API_KEY is missing. Render Free Tier blocks SMTP, so please use Resend.")
+
     try:
-        if smtp_port == 465:
-            server = smtplib.SMTP_SSL(smtp_server, smtp_port)
-        else:
-            server = smtplib.SMTP(smtp_server, smtp_port)
-            server.starttls()
-            
-        try:
-            server.login(sender_email, password)
-        except smtplib.SMTPAuthenticationError:
-            raise HTTPException(status_code=500, detail="SMTP Authentication failed. Check your App Password.")
+        url = "https://api.resend.com/emails"
+        headers = {
+            "Authorization": f"Bearer {resend_api_key}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "from": "Brainexa <onboarding@resend.dev>",
+            "to": [req.email],
+            "subject": subject,
+            "text": body
+        }
         
-        server.send_message(msg)
-        server.quit()
-        return {"message": "Verification code sent"}
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
+        
+        if response.status_code in [200, 201]:
+            return {"message": "Verification code sent"}
+        else:
+            print(f"Resend Error: {response.status_code} - {response.text}")
+            raise HTTPException(status_code=500, detail=f"Email delivery failed: {response.text}")
+            
     except Exception as e:
-        import traceback
-        trace = traceback.format_exc()
-        print(f"ERROR: Verification email error: {e}\n{trace}")
+        print(f"ERROR: Email delivery error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
