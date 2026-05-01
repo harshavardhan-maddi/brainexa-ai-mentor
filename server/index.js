@@ -538,7 +538,7 @@ async function callAI(prompt, isSyllabus = false, history = [], context = {}) {
     if (isFactual) {
       try {
         console.log(`🔍 Proactive Knowledge Retrieval for: ${prompt.substring(0, 50)}...`);
-        const knowledgeResponse = await fetch(`${process.env.PY_BACKEND_URL || 'http://localhost:8000'}/knowledge/direct-answer`, {
+        const knowledgeResponse = await fetch(`${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || 'http://localhost:8000'}`}`}/knowledge/direct-answer`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ topic: prompt })
@@ -934,7 +934,7 @@ async function extractText(filePath) {
       const blob = new Blob([buffer], { type: 'application/pdf' });
       formData.append('file', blob, path.basename(filePath));
 
-      const pyRes = await fetch('http://localhost:8000/extract-pdf', {
+      const pyRes = await fetch(`${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || 'http://localhost:8000'}`}`}/extract-pdf`, {
         method: 'POST',
         body: formData
       });
@@ -970,7 +970,7 @@ app.post('/api/auth/send-otp', async (req, res) => {
     await pool.query('INSERT INTO temp_otps (email, otp) VALUES ($1, $2)', [email, otp]);
 
     // Send via Python service
-    const pyRes = await fetch('http://localhost:8000/send-verification-otp', {
+    const pyRes = await fetch(`${process.env.PY_BACKEND_URL || 'http://localhost:8000'}/send-verification-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp })
@@ -2078,7 +2078,7 @@ io.on('connection', (socket) => {
 app.post('/api/knowledge/search', async (req, res) => {
   const { topic, userId } = req.body;
   try {
-    const pyRes = await fetch('http://localhost:8000/knowledge/search', {
+    const pyRes = await fetch(`${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || 'http://localhost:8000'}`}`}/knowledge/search`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic })
@@ -2102,7 +2102,7 @@ app.post('/api/knowledge/search', async (req, res) => {
 app.post('/api/knowledge/direct-answer', async (req, res) => {
   const { topic, userId } = req.body;
   try {
-    const pyRes = await fetch('http://localhost:8000/knowledge/direct-answer', {
+    const pyRes = await fetch(`${process.env.PY_BACKEND_URL || 'http://localhost:8000'}/knowledge/direct-answer`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic })
@@ -2162,7 +2162,7 @@ app.get('/api/materials/history/:userId', async (req, res) => {
 app.post('/api/knowledge/content', async (req, res) => {
   const { url, topic, userId } = req.body;
   try {
-    const pyRes = await fetch('http://localhost:8000/knowledge/content', {
+    const pyRes = await fetch(`${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || 'http://localhost:8000'}`}`}/knowledge/content`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url, topic })
@@ -2186,7 +2186,7 @@ app.post('/api/knowledge/content', async (req, res) => {
 app.post('/api/knowledge/questions', async (req, res) => {
   const { topic, explanation, userId } = req.body;
   try {
-    const pyRes = await fetch('http://localhost:8000/knowledge/questions', {
+    const pyRes = await fetch(`${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || 'http://localhost:8000'}`}`}/knowledge/questions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ topic, explanation })
@@ -2210,7 +2210,7 @@ app.post('/api/knowledge/questions', async (req, res) => {
 app.post('/api/knowledge/evaluate', async (req, res) => {
   const { question, answer, correctInfo, topic, userId } = req.body;
   try {
-    const pyRes = await fetch('http://localhost:8000/knowledge/evaluate', {
+    const pyRes = await fetch(`${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || `${process.env.PY_BACKEND_URL || 'http://localhost:8000'}`}`}/knowledge/evaluate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ question, answer, correct_info: correctInfo })
@@ -2321,7 +2321,7 @@ app.post('/api/user/change-email-otp', async (req, res) => {
     await pool.query('DELETE FROM temp_otps WHERE email = $1', [newEmail]);
     await pool.query('INSERT INTO temp_otps (email, otp) VALUES ($1, $2)', [newEmail, otp]);
 
-    const pyRes = await fetch('http://localhost:8000/send-verification-otp', {
+    const pyRes = await fetch(`${process.env.PY_BACKEND_URL || 'http://localhost:8000'}/send-verification-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: newEmail, otp })
