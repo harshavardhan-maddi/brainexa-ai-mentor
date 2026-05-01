@@ -23,7 +23,7 @@ services:
   - type: web
     name: brainexa-node-backend
     env: node
-    plan: starter
+    plan: free
     buildCommand: npm install
     startCommand: node server/index.js
     envVars:
@@ -48,7 +48,7 @@ services:
   - type: web
     name: brainexa-py-backend
     env: python
-    plan: starter
+    plan: free
     rootDir: server_py
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
