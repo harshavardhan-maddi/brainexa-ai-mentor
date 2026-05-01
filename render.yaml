@@ -1,25 +1,5 @@
 services:
-  # 1. Frontend (Static Site)
-
-  - type: static_site
-    name: brainexa-frontend
-
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-
-    envVars:
-      - key: VITE_BACKEND_URL
-        fromService:
-          type: web
-          name: brainexa-node-backend
-          property: host
-      - key: VITE_PY_BACKEND_URL
-        fromService:
-          type: web
-          name: brainexa-py-backend
-          property: host
-
-  # 2. Node.js Backend
+  # 1. Node.js Backend
   - type: web
     name: brainexa-node-backend
     env: node
@@ -31,20 +11,10 @@ services:
         fromDatabase:
           name: brainexa-db
           property: connectionString
-      - key: FRONTEND_URL
-        fromService:
-          type: static_site
-          name: brainexa-frontend
-          property: host
-      - key: PY_BACKEND_URL
-        fromService:
-          type: web
-          name: brainexa-py-backend
-          property: host
       - key: NODE_ENV
         value: production
 
-  # 3. Python AI Backend
+  # 2. Python AI Backend
   - type: web
     name: brainexa-py-backend
     env: python
@@ -57,11 +27,6 @@ services:
         fromDatabase:
           name: brainexa-db
           property: connectionString
-      - key: FRONTEND_URL
-        fromService:
-          type: static_site
-          name: brainexa-frontend
-          property: host
 
 databases:
   - name: brainexa-db
