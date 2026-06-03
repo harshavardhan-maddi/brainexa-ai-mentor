@@ -365,22 +365,22 @@ If you did not request this, please ignore this email.
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
 
-    # Use Resend API to bypass Render's SMTP block on Free Tier
-    resend_api_key = os.getenv("RESEND_API_KEY")
-    if not resend_api_key:
-        raise HTTPException(status_code=500, detail="RESEND_API_KEY is missing. Render Free Tier blocks SMTP, so please use Resend.")
+    # Use Brevo API to bypass Render's SMTP block and allow sending to anyone
+    brevo_api_key = os.getenv("BREVO_API_KEY")
+    if not brevo_api_key:
+        raise HTTPException(status_code=500, detail="BREVO_API_KEY is missing. Please use Brevo to send to any student.")
 
     try:
-        url = "https://api.resend.com/emails"
+        url = "https://api.brevo.com/v3/smtp/email"
         headers = {
-            "Authorization": f"Bearer {resend_api_key}",
+            "api-key": brevo_api_key,
             "Content-Type": "application/json"
         }
         payload = {
-            "from": "Brainexa <onboarding@resend.dev>",
-            "to": [req.email],
+            "sender": {"name": "Brainexa AI", "email": "brainexa.ai.support@gmail.com"},
+            "to": [{"email": req.email}],
             "subject": subject,
-            "text": body
+            "textContent": body
         }
         
         response = requests.post(url, headers=headers, json=payload, timeout=10)
@@ -388,7 +388,7 @@ If you did not request this, please ignore this email.
         if response.status_code in [200, 201]:
             return {"message": "Verification code sent"}
         else:
-            print(f"Resend Error: {response.status_code} - {response.text}")
+            print(f"Brevo Error: {response.status_code} - {response.text}")
             raise HTTPException(status_code=500, detail=f"Email delivery failed: {response.text}")
             
     except Exception as e:
